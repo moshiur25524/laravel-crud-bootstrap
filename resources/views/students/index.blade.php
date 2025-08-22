@@ -33,7 +33,8 @@
                 <td>
                     <a href="{{ route('students.show', $student->id) }}" class="btn btn-outline-warning">View</a>
                     <button type="button" class="btn btn-outline-info">Edit</button>
-                    <button type="button" class="btn btn-outline-danger">Delete</button>
+                    <button type="button" class="btn btn-outline-danger delete-btn" data-bs-toggle="modal"
+                        data-bs-target="#deleteStudentModal" data-id="{{ $student->id }}">Delete</button>
                 </td>
             </tr>
         @empty
@@ -48,4 +49,45 @@
 <div class="d-flex justify-center items-center">
     {{ $students->links() }}
 </div>
+
+<!-- Modal -->
+<div class="modal fade" id="deleteStudentModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content bg-dark text-white">
+            <div class="modal-header border-0">
+                <h5 class="modal-title">Delete Student</h1>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>You're about to delete this project. </p>
+                <p>This action cannot be reversed.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal">Cancel</button>
+                <form action="" id="deleteForm" method="POST">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="btn btn-danger">Delete Student</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@endsection
+
+@section('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const deleteButtons = document.querySelectorAll('.delete-btn');
+        const deleteForm = document.getElementById('deleteForm');
+
+        deleteButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const studentId = this.dataset.id;
+                deleteForm.action = `/students/${studentId}`;
+            })
+        })
+    })
+</script>
 @endsection
